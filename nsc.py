@@ -31,17 +31,21 @@ def build_graph(root, rank_maps, counts, num_cand):
 def total_voters(path, counts):
     s = 0
     for v in path:
-        s = s + v
+        s = s + counts[v]
     return s
             
 def main():
   filename = input("Preference profile file: ")
   input_file = open(filename, 'r')
   cand_map, rank_maps, rank_map_counts, num_voters = io.read_election_file(input_file)
-  print(rank_map_counts)
-  for i in range(1):
+  solution = 0
+  for i in range(len(rank_maps)):
     dag = build_graph(i, rank_maps, rank_map_counts, len(cand_map))
-    nx.draw_networkx(dag)
-    print(nx.dag_longest_path(dag, weight='weight'))
+    path = nx.dag_longest_path(dag, weight='weight')
+    voters = total_voters(path, rank_map_counts)
+    if voters > solution:
+        solution = voters
+        sc_path = path
+  print("By choosing profiles" + str(sc_path) + ", " + str(solution) + " voters are included")
 if __name__ == "__main__":
   main()
