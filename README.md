@@ -10,6 +10,6 @@ $ python3 nsc.py
 
 Preference profile file: netflix.soc
 
-By choosing profiles[2, 1, 0, 3], 636 voters are included
+By choosing profiles[2, 1, 0, 3], 91 pc of voters are included
 
 You can find suitable datasets on the preflib website: http://www.preflib.org/data/
