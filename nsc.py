@@ -28,24 +28,31 @@ def build_graph(root, rank_maps, counts, num_cand):
               dag.add_weighted_edges_from([(v1,v2,counts[v2])])
   return dag
 
+
 def total_voters(path, counts):
     s = 0
     for v in path:
         s = s + counts[v]
     return s
-            
-def main():
-  filename = input("Preference profile file: ")
-  input_file = open(filename, 'r')
-  cand_map, rank_maps, rank_map_counts, num_voters = io.read_election_file(input_file)
+
+
+def solve(rank_maps, rank_map_counts, num_cand):
   solution = 0
   for i in range(len(rank_maps)):
-    dag = build_graph(i, rank_maps, rank_map_counts, len(cand_map))
+    dag = build_graph(i, rank_maps, rank_map_counts, num_cand)
     path = nx.dag_longest_path(dag, weight='weight')
     voters = total_voters(path, rank_map_counts)
     if voters > solution:
         solution = voters
         sc_path = path
-  print("By choosing profiles" + str(sc_path) + ", " + str(solution) + " voters are included")
+    return solution, sc_path
+
+
+def main():
+  filename = input("Preference profile file: ")
+  input_file = open(filename, 'r')
+  cand_map, rank_maps, rank_map_counts, num_voters = io.read_election_file(input_file)
+  sol, path = solve(rank_maps, rank_map_counts, len(cand_map))
+  print("By choosing profiles" + str(path) + ", %.2f pc of the voters are included"%(sol/num_voters*100))
 if __name__ == "__main__":
   main()
